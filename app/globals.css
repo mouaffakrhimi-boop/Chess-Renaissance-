@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --chess-dark: #1a1a2e;
+  --chess-light: #16213e;
+  --chess-gold: #d4af37;
+  --board-white: #f0d9b5;
+  --board-black: #b58863;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, var(--chess-dark) 0%, var(--chess-light) 100%);
+  color: #fff;
+  font-family: 'Georgia', serif;
+  min-height: 100vh;
+}
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1;
+  border: 4px solid var(--chess-gold);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.square.light {
+  background-color: var(--board-white);
+  color: #000;
+}
+
+.square.dark {
+  background-color: var(--board-black);
+  color: #fff;
+}
+
+.square.selected {
+  background-color: #7b61ff !important;
+}
+
+.square:hover {
+  filter: brightness(1.1);
+}
+
+.piece {
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.magister-avatar {
+  width: 180px;
+  height: 180px;
+  position: relative;
+  filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4));
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.magister-face {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%);
+  border: 3px solid var(--chess-gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.2);
+}
+
+.magister-crown {
+  position: absolute;
+  top: -5px;
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  z-index: 10;
+}
+
+.magister-eyes {
+  display: flex;
+  gap: 25px;
+  margin-top: 15px;
+  position: relative;
+  z-index: 5;
+}
+
+.magister-eye {
+  width: 28px;
+  height: 28px;
+  background: #00d4ff;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 15px #00d4ff, inset 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.magister-mouth {
+  width: 50px;
+  height: 25px;
+  border-bottom: 3px solid var(--chess-gold);
+  border-radius: 0 0 25px 25px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 5;
+}
+
+.commentary-bubble {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+  border: 2px solid var(--chess-gold);
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.1);
+  max-width: 350px;
+}
+
+.commentary-text {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #fff;
+}
+
+.game-status {
+  text-align: center;
+  padding: 15px 25px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--chess-gold);
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--chess-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--chess-gold) 0%, #b8941f 100%);
+  color: var(--chess-dark);
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--chess-gold);
+  padding: 10px 25px;
+  border: 2px solid var(--chess-gold);
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.move-history {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .square {
+    font-size: 1.8rem;
+  }
+}

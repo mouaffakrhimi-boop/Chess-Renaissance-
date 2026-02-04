@@ -1,0 +1,15 @@
+Chess Renaissance v0.1.0 - The Magister Protocol
+
+Built with ♟️ in Tunis, Tunisia
+A Tunis 300 Project (300 TND / ~$100 budget)
+
+Features:
+- The Magister AI with personality
+- 5 difficulty levels
+- Complete chess rules
+- Beautiful Ottoman-inspired UI
+- PWA support
+- Zero deployment cost
+
+Total Files: 35
+Tech Stack: Next.js 14, React 18, TypeScript, Tailwind CSS, chess.js
