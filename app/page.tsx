@@ -9,11 +9,8 @@ import { MagisterAvatar } from '@/components/MagisterAvatar';
 import { CommentaryBubble } from '@/components/CommentaryBubble';
 import { ChessBoard } from '@/components/ChessBoard';
 import { MoveHistory } from '@/components/MoveHistory';
-import { CapturedPieces } from '@/components/CapturedPieces';
 import { SettingsPanel } from '@/components/SettingsPanel';
-import { PromotionModal } from '@/components/PromotionModal';
-import { GameOverModal } from '@/components/GameOverModal';
-import { RotateCcw, Flag, Settings, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { RotateCcw, Settings } from 'lucide-react';
 
 export default function Home() {
   const [game, setGame] = useState(() => new Chess());
@@ -24,8 +21,8 @@ export default function Home() {
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [validMoves, setValidMoves] = useState<string[]>([]);
   
-  const [magister] = useState(() => new MagisterEngine());
-  const [chessAI] = useState(() => new ChessAI(3));
+  const [magister, setMagister] = useState<MagisterEngine | null>(null);
+  const [chessAI, setChessAI] = useState<ChessAI | null>(null);
   const [commentary, setCommentary] = useState<MagisterCommentary | null>(null);
   const [expression, setExpression] = useState<Expression>('neutral');
   const [isThinking, setIsThinking] = useState(false);
@@ -36,10 +33,16 @@ export default function Home() {
   const [playerName, setPlayerName] = useState('Guest');
 
   useEffect(() => {
-    const opening = magister.getOpeningComment();
+    const magisterInstance = new MagisterEngine();
+    const chessAIInstance = new ChessAI(3);
+    
+    setMagister(magisterInstance);
+    setChessAI(chessAIInstance);
+    
+    const opening = magisterInstance.getOpeningComment();
     setCommentary(opening);
     setExpression(opening.expression);
-    magister.incrementSessionGames();
+    magisterInstance.incrementSessionGames();
   }, []);
 
   const handleMove = useCallback((from: string, to: string, promotion?: string) => {
@@ -57,9 +60,11 @@ export default function Home() {
         else if (newGame.isDraw()) setState('draw');
         else setState('playing');
         
-        const response = magister.analyzeMove(move.san, 0, 0, 5, !!move.captured, move.san.includes('+'));
-        setCommentary(response);
-        setExpression(response.expression);
+        if (magister) {
+          const response = magister.analyzeMove(move.san, 0, 0, 5, !!move.captured, move.san.includes('+'));
+          setCommentary(response);
+          setExpression(response.expression);
+        }
         setSelectedSquare(null);
         setValidMoves([]);
       }
@@ -69,7 +74,7 @@ export default function Home() {
   }, [game, magister]);
 
   useEffect(() => {
-    if (turn === 'b' && state === 'playing') {
+    if (turn === 'b' && state === 'playing' && chessAI && magister) {
       setIsThinking(true);
       setCommentary(magister.getThinkingComment());
       
@@ -92,11 +97,23 @@ export default function Home() {
     setMoveHistory([]);
     setSelectedSquare(null);
     setValidMoves([]);
-    magister.resetGame();
-    const opening = magister.getOpeningComment();
-    setCommentary(opening);
-    setExpression(opening.expression);
+    if (magister) {
+      magister.resetGame();
+      const opening = magister.getOpeningComment();
+      setCommentary(opening);
+      setExpression(opening.expression);
+    }
   };
+
+  if (!magister || !chessAI) {
+    return (
+      <main className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-chess-gold text-2xl font-bold animate-pulse">
+          Loading Chess Renaissance...
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen p-4 md:p-8">
